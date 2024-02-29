@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Inventario</title>
+<link href="https://fonts.googleapis.com/css2?family=Open+Sans&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="container">
+        <h1>Inventario</h1>
+        
+        <!-- Formulario para agregar elementos al inventario -->
+        <form id="formulario" class="formulario" action="basededatos.php" method="POST">
+          <label for="item">Item:</label>
+          <input type="number" id="item" name="item" required>
+          <label for="insumo">Insumo:</label>
+          <input type="text" id="insumo" name="insumo" required>
+          <label for="cantidad">Cantidad:</label>
+          <input type="number" id="cantidad" name="cantidad" required>
+          <label for="valorUnidad">Valor Unidad:</label>
+          <input type="number" id="valorUnidad" name="valorUnidad" step="0.01" required>
+          <button type="submit" class="btn" id="guardarBtn">Agregar al inventario</button>
+        </form>
+        
+        <!-- Tabla para mostrar los elementos del inventario -->
+        <div class="tabla-container">
+            <h2>Elementos del inventario</h2>
+            <table id="tablaInventario">
+                <tr>
+                    <th>ID</th>
+                    <th>Item</th>
+                    <th>Insumo</th>
+                    <th>Cantidad</th>
+                    <th>Valor Unidad</th>
+                    <th>Valor Total</th>
+                    <th>Código QR</th>
+                </tr>
+            </table>
+        </div>
+    </div>
+
+    <!-- Script para cargar los datos del inventario -->
+    <script>
+        // Función para cargar los datos del inventario desde la base de datos
+        function cargarInventario() {
+            fetch('basededatos.php')
+            .then(response => response.json())
+            .then(data => {
+                const tabla = document.getElementById('tablaInventario');
+                tabla.innerHTML = ''; // Limpiar la tabla antes de agregar nuevos datos
+                
+                data.forEach(row => {
+                    const newRow = tabla.insertRow();
+                    newRow.innerHTML = `<td>${row.id}</td><td>${row.item}</td><td>${row.insumo}</td><td>${row.cantidad}</td><td>${row.valor_unidad}</td><td>${row.valor_total}</td><td><img src="${row.codigo_QR}" alt="Código QR"></td>`;
+                });
+            })
+            .catch(error => console.error('Error:', error));
+        }
+
+        // Cargar los datos del inventario al cargar la página
+        window.onload = cargarInventario;
+    </script>
+</body>
+</html>
+
